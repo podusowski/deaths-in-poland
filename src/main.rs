@@ -1,4 +1,7 @@
+use std::collections::HashMap;
+
 use calamine::{open_workbook, Error, Reader, Xlsx};
+use plotters::prelude::*;
 
 #[derive(Debug)]
 struct AgeGroup(Vec<u32>);
@@ -20,9 +23,7 @@ impl AgeGroup {
 struct AnnualData {
     title: String,
     general: AgeGroup,
-    _0to4: AgeGroup,
-    _5to9: AgeGroup,
-    _65to69: AgeGroup,
+    age_groups: HashMap<&'static str, AgeGroup>,
 }
 
 fn find_age_group(
@@ -50,13 +51,52 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
         .worksheet_range("OGÓŁEM")
         .ok_or(Error::Msg("No sheet."))??;
 
+    let mut age_groups = HashMap::<&str, AgeGroup>::new();
+    age_groups.insert("0 - 4", find_age_group(&range, "0 - 4")?);
+    age_groups.insert("5 - 9", find_age_group(&range, "5 - 9")?);
+
     Ok(AnnualData {
         title: path.to_owned(),
         general: find_age_group(&range, "Ogółem")?,
-        _0to4: find_age_group(&range, "0 - 4")?,
-        _5to9: find_age_group(&range, "5 - 9")?,
-        _65to69: find_age_group(&range, "65 - 69")?,
+        age_groups,
     })
+}
+
+fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
+    let area = BitMapBackend::new("plot.png", (1024, 760)).into_drawing_area();
+    area.fill(&WHITE)?;
+    let x_axis = (2017..2021);
+    let z_axis = (1..3);
+
+    let mut chart = ChartBuilder::on(&area)
+        .caption(format!("3D Plot Test"), ("sans", 20))
+        .build_cartesian_3d(x_axis, -3.0..3.0, z_axis.clone())?;
+
+    chart.with_projection(|mut pb| {
+        pb.yaw = 0.5;
+        pb.scale = 0.9;
+        pb.into_matrix()
+    });
+
+    chart.configure_axes().draw()?;
+
+    chart.draw_series(
+        SurfaceSeries::xoz(
+            [1, 2, 3].iter().cloned(),
+            [1, 2, 3].iter().cloned(),
+            |year, group| 1.0,
+        )
+        .style(BLUE.mix(0.2).filled()),
+    )?;
+
+    chart
+        .configure_series_labels()
+        .border_style(&BLACK)
+        .draw()?;
+
+    area.present()?;
+
+    Ok(())
 }
 
 fn main() -> anyhow::Result<()> {
@@ -68,14 +108,16 @@ fn main() -> anyhow::Result<()> {
         read("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?,
     ];
 
-    for year in years {
+    for year in &years {
         println!("{:?}", year.title);
         println!("general ({}): {:?}", year.general.avg(), year.general);
-        println!("0-4 ({}): {:?}", year._0to4.avg(), year._0to4);
-        println!("5-9 ({}): {:?}", year._5to9.avg(), year._5to9);
-        println!("65-69 ({}): {:?}", year._65to69.avg(), year._65to69);
+        for (label, age_group) in &year.age_groups {
+            println!("{} ({}): {:?}", label, age_group.avg(), age_group.0);
+        }
         println!("");
     }
+
+    draw_plot(&years)?;
 
     Ok(())
 }
