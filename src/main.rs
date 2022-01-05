@@ -3,6 +3,7 @@ use calamine::{open_workbook, Error, Reader, Xlsx};
 struct AnnualData {
     general: Vec<u32>,
     _0to4: Vec<u32>,
+    _5to9: Vec<u32>,
 }
 
 fn find_age_group(
@@ -31,6 +32,7 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
     Ok(AnnualData {
         general: find_age_group(&range, "Ogółem")?,
         _0to4: find_age_group(&range, "0 - 4")?,
+        _5to9: find_age_group(&range, "5 - 9")?,
     })
 }
 
@@ -38,6 +40,7 @@ fn read_and_print(path: &str) -> anyhow::Result<()> {
     println!("{:?}", path);
     println!("general: {:?}", read(path)?.general);
     println!("0-4: {:?}", read(path)?._0to4);
+    println!("5-9: {:?}", read(path)?._5to9);
     println!("");
     Ok(())
 }
