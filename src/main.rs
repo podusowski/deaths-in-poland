@@ -3,6 +3,12 @@ use calamine::{open_workbook, Error, Reader, Xlsx};
 #[derive(Debug)]
 struct AgeGroup(Vec<u32>);
 
+impl AgeGroup {
+    fn avg(&self) -> f32 {
+        self.0.iter().sum::<u32>() as f32 / self.0.len() as f32
+    }
+}
+
 struct AnnualData {
     general: AgeGroup,
     _0to4: AgeGroup,
@@ -42,9 +48,10 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
 }
 
 fn read_and_print(path: &str) -> anyhow::Result<()> {
+    let annual = read(path)?;
     println!("{:?}", path);
     println!("general: {:?}", read(path)?.general);
-    println!("0-4: {:?}", read(path)?._0to4);
+    println!("0-4 ({}): {:?}", annual._0to4.avg(), read(path)?._0to4);
     println!("5-9: {:?}", read(path)?._5to9);
     println!("");
     Ok(())
