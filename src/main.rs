@@ -44,7 +44,7 @@ fn find_age_group(
     ))
 }
 
-const AGE_GROUPS: &'static [&str] = &["0 - 4", "5 - 9"];
+const AGE_GROUPS: &'static [&str] = &["0 - 4", "5 - 9", "10 - 14"];
 
 fn read(path: &str) -> anyhow::Result<AnnualData> {
     let mut workbook: Xlsx<_> = open_workbook(path)?;
@@ -82,9 +82,8 @@ fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
     let x_axis = 0u32..AGE_GROUPS.len() as u32;
     let z_axis = 0u32..data[0].len() as u32; // They all should have the same length.
 
-    let mut chart = ChartBuilder::on(&area)
-        .caption(format!("3D Plot Test"), ("sans", 20))
-        .build_cartesian_3d(x_axis.clone(), 0u32..100u32, z_axis.clone())?;
+    let mut chart =
+        ChartBuilder::on(&area).build_cartesian_3d(x_axis.clone(), 0u32..100u32, z_axis.clone())?;
 
     chart.with_projection(|mut pb| {
         pb.yaw = 0.5;
