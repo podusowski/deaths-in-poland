@@ -68,27 +68,36 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
 fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
     let area = BitMapBackend::new("plot.png", (1024, 760)).into_drawing_area();
     area.fill(&WHITE)?;
-    let x_axis = (2017..2021);
-    let z_axis = (1..3);
+
+    // Top most vector is age group.
+    let mut data = Vec::<Vec<u32>>::new();
+    for age_group in AGE_GROUPS {
+        let mut deaths_in_age_group = Vec::<u32>::new();
+        for year in years {
+            deaths_in_age_group.extend(year.age_groups[age_group].0.iter());
+        }
+        data.push(deaths_in_age_group);
+    }
+
+    let x_axis = 0u32..AGE_GROUPS.len() as u32;
+    let z_axis = 0u32..data[0].len() as u32; // They all should have the same length.
 
     let mut chart = ChartBuilder::on(&area)
         .caption(format!("3D Plot Test"), ("sans", 20))
-        .build_cartesian_3d(x_axis, -3.0..3.0, z_axis.clone())?;
+        .build_cartesian_3d(x_axis.clone(), 0u32..100u32, z_axis.clone())?;
 
     chart.with_projection(|mut pb| {
         pb.yaw = 0.5;
-        pb.scale = 0.9;
+        pb.scale = 1.0;
         pb.into_matrix()
     });
 
     chart.configure_axes().draw()?;
 
     chart.draw_series(
-        SurfaceSeries::xoz(
-            [1, 2, 3].iter().cloned(),
-            [1, 2, 3].iter().cloned(),
-            |year, group| 1.0,
-        )
+        SurfaceSeries::xoz(x_axis, z_axis, |group, week| {
+            data[group as usize][week as usize]
+        })
         .style(BLUE.mix(0.2).filled()),
     )?;
 
