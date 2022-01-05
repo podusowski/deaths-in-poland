@@ -44,7 +44,27 @@ fn find_age_group(
     ))
 }
 
-const AGE_GROUPS: &'static [&str] = &["0 - 4", "5 - 9", "10 - 14"];
+const AGE_GROUPS: &'static [&str] = &[
+    "0 - 4",
+    "5 - 9",
+    "10 - 14",
+    "15 - 19",
+    "20 - 24",
+    "25 - 29",
+    "30 - 34",
+    "35 - 39",
+    "40 - 44",
+    "45 - 49",
+    "50 - 54",
+    "55 - 59",
+    "60 - 64",
+    "65 - 69",
+    "70 - 74",
+    "75 - 79",
+    "80 - 84",
+    "85 - 89",
+    "90 i więcej",
+];
 
 fn read(path: &str) -> anyhow::Result<AnnualData> {
     let mut workbook: Xlsx<_> = open_workbook(path)?;
@@ -78,43 +98,49 @@ fn flatten_out_into_weeks(years: &[AnnualData]) -> Vec<Vec<u32>> {
 }
 
 fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
-    let area = BitMapBackend::new("plot.png", (1024, 760)).into_drawing_area();
-    area.fill(&WHITE)?;
+    let area = BitMapBackend::gif("plot.gif", (1024, 760), 100)?.into_drawing_area();
 
     let data = flatten_out_into_weeks(years);
     let x_axis = 0u32..data.len() as u32;
     let z_axis = 0u32..data[0].len() as u32; // They all should have the same length.
 
-    let mut chart =
-        ChartBuilder::on(&area).build_cartesian_3d(x_axis.clone(), 0u32..100u32, z_axis.clone())?;
+    for yaw in 0..360 {
+        area.fill(&BLACK)?;
+        let mut chart = ChartBuilder::on(&area).build_cartesian_3d(
+            x_axis.clone(),
+            0u32..3000u32,
+            z_axis.clone(),
+        )?;
 
-    chart.with_projection(|mut pb| {
-        pb.yaw = 0.5;
-        pb.scale = 1.0;
-        pb.into_matrix()
-    });
+        chart.with_projection(|mut pb| {
+            pb.pitch = 0.7;
+            pb.yaw = yaw as f64 * (3.14 / 180.0);
+            pb.scale = 0.7;
+            pb.into_matrix()
+        });
 
-    chart.configure_axes().draw()?;
+        chart.configure_axes().draw()?;
 
-    chart.draw_series(
-        SurfaceSeries::xoz(x_axis, z_axis, |group, week| {
-            data[group as usize][week as usize]
-        })
-        .style(BLUE.mix(0.2).filled()),
-    )?;
+        chart.draw_series(
+            SurfaceSeries::xoz(x_axis.clone(), z_axis.clone(), |group, week| {
+                data[group as usize][week as usize]
+            })
+            .style(RED.mix(0.7)),
+        )?;
 
-    area.present()?;
+        area.present()?;
+    }
 
     Ok(())
 }
 
 fn main() -> anyhow::Result<()> {
     let years = [
-        read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
         read("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?,
     ];
 
     for year in &years {
