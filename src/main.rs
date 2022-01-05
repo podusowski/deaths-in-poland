@@ -100,10 +100,6 @@ fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
         .style(BLUE.mix(0.2).filled()),
     )?;
 
-    chart
-        .configure_series_labels()
-        .border_style(&BLACK)
-        .draw()?;
 
     area.present()?;
 
