@@ -44,7 +44,7 @@ fn find_age_group(
     ))
 }
 
-const AGE_GROUPS: &'static [&'static str] = ["0 - 4"];
+const AGE_GROUPS: &'static [&str] = &["0 - 4", "5 - 9"];
 
 fn read(path: &str) -> anyhow::Result<AnnualData> {
     let mut workbook: Xlsx<_> = open_workbook(path)?;
@@ -54,8 +54,9 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
         .ok_or(Error::Msg("No sheet."))??;
 
     let mut age_groups = HashMap::<&str, AgeGroup>::new();
-    age_groups.insert("0 - 4", find_age_group(&range, "0 - 4")?);
-    age_groups.insert("5 - 9", find_age_group(&range, "5 - 9")?);
+    for age_group in AGE_GROUPS {
+        age_groups.insert(&age_group, find_age_group(&range, age_group)?);
+    }
 
     Ok(AnnualData {
         title: path.to_owned(),
