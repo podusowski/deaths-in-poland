@@ -1,7 +1,7 @@
 use calamine::{open_workbook, Error, RangeDeserializerBuilder, Reader, Xlsx};
 
 struct AnnualData {
-    general: Vec<Option<f64>>,
+    general: Vec<u32>,
 }
 
 fn read(path: &str) -> anyhow::Result<AnnualData> {
@@ -22,14 +22,23 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
         })
         .ok_or(anyhow::anyhow!("no data"))?[3..]
         .iter()
-        .map(|v| v.get_float().or(None))
+        .map(|v| v.get_float().unwrap_or(0.0) as u32)
         .collect();
 
     Ok(AnnualData { general })
 }
 
+fn read_and_print(path: &str) -> anyhow::Result<()> {
+    println!("{:?}", path);
+    println!(
+        "{:?}",
+        read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?.general
+    );
+    println!("");
+    Ok(())
+}
+
 fn main() -> anyhow::Result<()> {
-    let y2021 = read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?;
-    println!("{:?}", y2021.general);
+    read_and_print("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?;
     Ok(())
 }
