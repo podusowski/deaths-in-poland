@@ -65,11 +65,7 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
     })
 }
 
-fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
-    let area = BitMapBackend::new("plot.png", (1024, 760)).into_drawing_area();
-    area.fill(&WHITE)?;
-
-    // Top most vector is age group.
+fn flatten_out_into_weeks(years: &[AnnualData]) -> Vec<Vec<u32>> {
     let mut data = Vec::<Vec<u32>>::new();
     for age_group in AGE_GROUPS {
         let mut deaths_in_age_group = Vec::<u32>::new();
@@ -78,8 +74,15 @@ fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
         }
         data.push(deaths_in_age_group);
     }
+    data
+}
 
-    let x_axis = 0u32..AGE_GROUPS.len() as u32;
+fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
+    let area = BitMapBackend::new("plot.png", (1024, 760)).into_drawing_area();
+    area.fill(&WHITE)?;
+
+    let data = flatten_out_into_weeks(years);
+    let x_axis = 0u32..data.len() as u32;
     let z_axis = 0u32..data[0].len() as u32; // They all should have the same length.
 
     let mut chart =
