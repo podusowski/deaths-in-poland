@@ -4,6 +4,7 @@ use calamine::{open_workbook, Error, Reader, Xlsx};
 struct AgeGroup(Vec<u32>);
 
 impl AgeGroup {
+    /// Calculate an average out of non-zero elements.
     fn avg(&self) -> f32 {
         // Ugh, need this imperative code to count it in a single pass.
         let mut sum = 0;
