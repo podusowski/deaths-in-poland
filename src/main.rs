@@ -44,6 +44,8 @@ fn find_age_group(
     ))
 }
 
+const AGE_GROUPS: &'static [&'static str] = ["0 - 4"];
+
 fn read(path: &str) -> anyhow::Result<AnnualData> {
     let mut workbook: Xlsx<_> = open_workbook(path)?;
 
