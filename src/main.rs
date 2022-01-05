@@ -1,25 +1,30 @@
 use calamine::{open_workbook, Error, Reader, Xlsx};
 
+#[derive(Debug)]
+struct AgeGroup(Vec<u32>);
+
 struct AnnualData {
-    general: Vec<u32>,
-    _0to4: Vec<u32>,
-    _5to9: Vec<u32>,
+    general: AgeGroup,
+    _0to4: AgeGroup,
+    _5to9: AgeGroup,
 }
 
 fn find_age_group(
     range: &calamine::Range<calamine::DataType>,
     group: &str,
-) -> anyhow::Result<Vec<u32>> {
-    Ok(range
-        .rows()
-        // Find the right group and take the data for the whole country.
-        .find(|row| row[0].get_string() == Some(group) && row[1].get_string() == Some("PL"))
-        // Drop labels and leave only the numbers.
-        .ok_or(anyhow::anyhow!("no data"))?[3..]
-        .iter()
-        // Calamine reads it as floats, but we want decimals instead.
-        .map(|v| v.get_float().unwrap_or(0.0) as u32)
-        .collect())
+) -> anyhow::Result<AgeGroup> {
+    Ok(AgeGroup(
+        range
+            .rows()
+            // Find the right group and take the data for the whole country.
+            .find(|row| row[0].get_string() == Some(group) && row[1].get_string() == Some("PL"))
+            // Drop labels and leave only the numbers.
+            .ok_or(anyhow::anyhow!("no data"))?[3..]
+            .iter()
+            // Calamine reads it as floats, but we want decimals instead.
+            .map(|v| v.get_float().unwrap_or(0.0) as u32)
+            .collect(),
+    ))
 }
 
 fn read(path: &str) -> anyhow::Result<AnnualData> {
