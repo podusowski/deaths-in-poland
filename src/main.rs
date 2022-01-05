@@ -50,9 +50,9 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
 fn read_and_print(path: &str) -> anyhow::Result<()> {
     let annual = read(path)?;
     println!("{:?}", path);
-    println!("general: {:?}", read(path)?.general);
-    println!("0-4 ({}): {:?}", annual._0to4.avg(), read(path)?._0to4);
-    println!("5-9: {:?}", read(path)?._5to9);
+    println!("general ({}): {:?}", annual.general.avg(), annual.general);
+    println!("0-4 ({}): {:?}", annual._0to4.avg(), annual._0to4);
+    println!("5-9 ({}): {:?}", annual._5to9.avg(), annual._5to9);
     println!("");
     Ok(())
 }
