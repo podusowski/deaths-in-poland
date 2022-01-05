@@ -5,7 +5,14 @@ struct AgeGroup(Vec<u32>);
 
 impl AgeGroup {
     fn avg(&self) -> f32 {
-        self.0.iter().sum::<u32>() as f32 / self.0.len() as f32
+        // Ugh, need this imperative code to count it in a single pass.
+        let mut sum = 0;
+        let mut count = 0;
+        for e in self.0.iter().filter(|v| **v != 0) {
+            sum += e;
+            count += 1;
+        }
+        sum as f32 / count as f32
     }
 }
 
