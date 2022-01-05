@@ -10,6 +10,7 @@ impl AgeGroup {
 }
 
 struct AnnualData {
+    title: String,
     general: AgeGroup,
     _0to4: AgeGroup,
     _5to9: AgeGroup,
@@ -42,6 +43,7 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
         .ok_or(Error::Msg("No sheet."))??;
 
     Ok(AnnualData {
+        title: path.to_owned(),
         general: find_age_group(&range, "Ogółem")?,
         _0to4: find_age_group(&range, "0 - 4")?,
         _5to9: find_age_group(&range, "5 - 9")?,
@@ -49,22 +51,23 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
     })
 }
 
-fn read_and_print(path: &str) -> anyhow::Result<()> {
-    let annual = read(path)?;
-    println!("{:?}", path);
-    println!("general ({}): {:?}", annual.general.avg(), annual.general);
-    println!("0-4 ({}): {:?}", annual._0to4.avg(), annual._0to4);
-    println!("5-9 ({}): {:?}", annual._5to9.avg(), annual._5to9);
-    println!("65-69 ({}): {:?}", annual._65to69.avg(), annual._65to69);
-    println!("");
-    Ok(())
-}
-
 fn main() -> anyhow::Result<()> {
-    read_and_print("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?;
-    read_and_print("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?;
-    read_and_print("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?;
-    read_and_print("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?;
-    read_and_print("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?;
+    let years = [
+        read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?,
+    ];
+
+    for year in years {
+        println!("{:?}", year.title);
+        println!("general ({}): {:?}", year.general.avg(), year.general);
+        println!("0-4 ({}): {:?}", year._0to4.avg(), year._0to4);
+        println!("5-9 ({}): {:?}", year._5to9.avg(), year._5to9);
+        println!("65-69 ({}): {:?}", year._65to69.avg(), year._65to69);
+        println!("");
+    }
+
     Ok(())
 }
