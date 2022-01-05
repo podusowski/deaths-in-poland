@@ -30,15 +30,16 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
 
 fn read_and_print(path: &str) -> anyhow::Result<()> {
     println!("{:?}", path);
-    println!(
-        "{:?}",
-        read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?.general
-    );
+    println!("{:?}", read(path)?.general);
     println!("");
     Ok(())
 }
 
 fn main() -> anyhow::Result<()> {
     read_and_print("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?;
+    read_and_print("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?;
+    read_and_print("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?;
+    read_and_print("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?;
+    read_and_print("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?;
     Ok(())
 }
