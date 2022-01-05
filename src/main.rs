@@ -13,6 +13,7 @@ struct AnnualData {
     general: AgeGroup,
     _0to4: AgeGroup,
     _5to9: AgeGroup,
+    _65to69: AgeGroup,
 }
 
 fn find_age_group(
@@ -44,6 +45,7 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
         general: find_age_group(&range, "Ogółem")?,
         _0to4: find_age_group(&range, "0 - 4")?,
         _5to9: find_age_group(&range, "5 - 9")?,
+        _65to69: find_age_group(&range, "65 - 69")?,
     })
 }
 
@@ -53,6 +55,7 @@ fn read_and_print(path: &str) -> anyhow::Result<()> {
     println!("general ({}): {:?}", annual.general.avg(), annual.general);
     println!("0-4 ({}): {:?}", annual._0to4.avg(), annual._0to4);
     println!("5-9 ({}): {:?}", annual._5to9.avg(), annual._5to9);
+    println!("65-69 ({}): {:?}", annual._65to69.avg(), annual._65to69);
     println!("");
     Ok(())
 }
