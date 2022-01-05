@@ -1,7 +1,24 @@
-use calamine::{open_workbook, Error, RangeDeserializerBuilder, Reader, Xlsx};
+use calamine::{open_workbook, Error, Reader, Xlsx};
 
 struct AnnualData {
     general: Vec<u32>,
+    _0to4: Vec<u32>,
+}
+
+fn find_age_group(
+    range: &calamine::Range<calamine::DataType>,
+    group: &str,
+) -> anyhow::Result<Vec<u32>> {
+    Ok(range
+        .rows()
+        // Find the right group and take the data for the whole country.
+        .find(|row| row[0].get_string() == Some(group) && row[1].get_string() == Some("PL"))
+        // Drop labels and leave only the numbers.
+        .ok_or(anyhow::anyhow!("no data"))?[3..]
+        .iter()
+        // Calamine reads it as floats, but we want decimals instead.
+        .map(|v| v.get_float().unwrap_or(0.0) as u32)
+        .collect())
 }
 
 fn read(path: &str) -> anyhow::Result<AnnualData> {
@@ -11,26 +28,16 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
         .worksheet_range("OGÓŁEM")
         .ok_or(Error::Msg("No sheet."))??;
 
-    let general = range
-        .rows()
-        .find(|r| {
-            if let Some(s) = r[0].get_string() {
-                s == "Ogółem"
-            } else {
-                false
-            }
-        })
-        .ok_or(anyhow::anyhow!("no data"))?[3..]
-        .iter()
-        .map(|v| v.get_float().unwrap_or(0.0) as u32)
-        .collect();
-
-    Ok(AnnualData { general })
+    Ok(AnnualData {
+        general: find_age_group(&range, "Ogółem")?,
+        _0to4: find_age_group(&range, "0 - 4")?,
+    })
 }
 
 fn read_and_print(path: &str) -> anyhow::Result<()> {
     println!("{:?}", path);
-    println!("{:?}", read(path)?.general);
+    println!("general: {:?}", read(path)?.general);
+    println!("0-4: {:?}", read(path)?._0to4);
     println!("");
     Ok(())
 }
