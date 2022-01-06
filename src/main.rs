@@ -119,13 +119,18 @@ fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
             pb.into_matrix()
         });
 
-        chart.configure_axes().draw()?;
+        chart
+            .configure_axes()
+            .label_style(TextStyle::from(("sans-serif", 14)).color(&RED))
+            .x_formatter(&|x| AGE_GROUPS[*x as usize].to_string())
+            .z_formatter(&|_| "".to_string())
+            .draw()?;
 
         chart.draw_series(
             SurfaceSeries::xoz(x_axis.clone(), z_axis.clone(), |group, week| {
                 data[group as usize][week as usize]
             })
-            .style(RED.mix(0.7)),
+            .style_func(&|&v| RED.mix(v as f64 / 6000.0 + 0.2).into()),
         )?;
 
         area.present()?;
