@@ -177,6 +177,45 @@ fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Res
     Ok(())
 }
 
+fn draw_annual_sums(years: &[AnnualData]) -> anyhow::Result<()> {
+    let path = "annual.png";
+    let area = BitMapBackend::new(path, (1024, 760)).into_drawing_area();
+
+    let x_axis = 0u32..years[0].general.0.len() as u32; // They all should have the same length.
+    let y_axis = 0u32..20000u32;
+
+    area.fill(&WHITE)?;
+
+    let colors = years
+        .iter()
+        .enumerate()
+        .map(|(number, _)| RED.mix(1.0 - (number as f64 / 5.0)));
+
+    for (year, color) in years.iter().zip(colors) {
+        let mut chart =
+            ChartBuilder::on(&area).build_cartesian_2d(x_axis.clone(), y_axis.clone())?;
+
+        chart
+            .configure_mesh()
+            .disable_x_mesh()
+            .disable_y_mesh()
+            .draw()?;
+
+        chart.draw_series(LineSeries::new(
+            year.general
+                .0
+                .iter()
+                .enumerate()
+                .map(|(x, y)| (x as u32, *y)),
+            color,
+        ))?;
+
+        area.present()?;
+    }
+
+    Ok(())
+}
+
 fn main() -> anyhow::Result<()> {
     let years = [
         read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?,
@@ -200,6 +239,8 @@ fn main() -> anyhow::Result<()> {
     for age_group in AGE_GROUPS {
         draw_plot_for_age_group(&years, age_group)?;
     }
+
+    draw_annual_sums(&years)?;
 
     Ok(())
 }
