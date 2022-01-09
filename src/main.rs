@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::format};
 
 use calamine::{open_workbook, Error, Reader, Xlsx};
 use plotters::prelude::*;
@@ -97,7 +97,7 @@ fn flatten_out_into_weeks(years: &[AnnualData]) -> Vec<Vec<u32>> {
     data
 }
 
-fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
+fn draw_super_plot(years: &[AnnualData]) -> anyhow::Result<()> {
     let area = BitMapBackend::gif("plot.gif", (1024, 760), 100)?.into_drawing_area();
 
     let data = flatten_out_into_weeks(years);
@@ -139,13 +139,51 @@ fn draw_plot(years: &[AnnualData]) -> anyhow::Result<()> {
     Ok(())
 }
 
+fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Result<()> {
+    let path = format!("age-group-{}.png", age_group);
+    let area = BitMapBackend::new(path.as_str(), (1024, 760)).into_drawing_area();
+
+    let x_axis = 0u32..years[0].age_groups[age_group].0.len() as u32; // They all should have the same length.
+    let y_axis = 0u32..3000u32;
+
+    let caption = format!("ages {}", age_group);
+
+    area.fill(&BLACK)?;
+
+    let colors = years
+        .iter()
+        .enumerate()
+        .map(|(number, _)| RED.mix(1.0 - (number as f64 / 5.0)));
+
+    for (year, color) in years.iter().zip(colors) {
+        let mut chart = ChartBuilder::on(&area)
+            .caption(caption.clone(), ("sans-serif", 18).into_font().color(&RED))
+            .build_cartesian_2d(x_axis.clone(), y_axis.clone())?;
+
+        chart.configure_mesh().draw()?;
+
+        chart.draw_series(LineSeries::new(
+            year.age_groups[age_group]
+                .0
+                .iter()
+                .enumerate()
+                .map(|(x, y)| (x as u32, *y)),
+            color,
+        ))?;
+
+        area.present()?;
+    }
+
+    Ok(())
+}
+
 fn main() -> anyhow::Result<()> {
     let years = [
-        read("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?,
         read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?,
     ];
 
     for year in &years {
@@ -157,7 +195,11 @@ fn main() -> anyhow::Result<()> {
         println!("");
     }
 
-    draw_plot(&years)?;
+    draw_super_plot(&years)?;
+
+    for age_group in AGE_GROUPS {
+        draw_plot_for_age_group(&years, age_group)?;
+    }
 
     Ok(())
 }
