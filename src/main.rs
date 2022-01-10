@@ -218,11 +218,11 @@ fn draw_annual_sums(years: &[AnnualData]) -> anyhow::Result<()> {
 
 fn main() -> anyhow::Result<()> {
     let years = [
-        read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
         read("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?,
+        read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?,
     ];
 
     for year in &years {
