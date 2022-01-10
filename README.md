@@ -1,8 +1,8 @@
-Deaths in Poland (from any reason)
-----------------------------------
+Deaths in Poland by week and age
+--------------------------------
 
 Horizontal axes are weeks from 2017 to end of 2021
-and age groups with 5yrs intervals. Height represent the number of deaths for a
+and age groups with 5yrs intervals. Height represents the number of deaths for a
 given group in a given week.
 
 ![](plot.gif)
