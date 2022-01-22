@@ -2,7 +2,7 @@ use std::{collections::HashMap, fmt::format};
 
 use calamine::{open_workbook, Error, Reader, Xlsx};
 use plotters::prelude::*;
-use prettytable::{Cell, Row};
+use prettytable::{format, Cell, Row};
 
 #[derive(Debug)]
 struct AgeGroup(Vec<u32>);
@@ -224,6 +224,16 @@ fn draw_annual_sums(years: &[AnnualData]) -> anyhow::Result<()> {
 
 fn print_tables(years: &[AnnualData]) {
     let mut table = prettytable::Table::new();
+    let github = format::FormatBuilder::new()
+        .column_separator('|')
+        .borders('|')
+        .separators(
+            &[format::LinePosition::Intern],
+            format::LineSeparator::new('-', '|', '|', '|'),
+        )
+        .padding(1, 1)
+        .build();
+    table.set_format(github);
 
     table.add_row(Row::new({
         let mut row = vec![Cell::new("")];
