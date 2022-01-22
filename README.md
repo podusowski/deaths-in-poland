@@ -12,9 +12,12 @@ dobrze znane "sezony grypowe". Dobrze widać również "dolinę" w ilości zgon�
 około 75 roku życia. Jest ona spowodowana mniejszą ilośćią urodzeń podczas
 II wojny światowej.
 
-|                    | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 |
-|--------------------|------|------|------|------|------|------|------|
-| średnia tygodniowa | 7582 | 7441 | 7741 | 7910 | 7839 | 9162 | 9956 |
+Z roku na rok wspomniany "dołek wojenny" wypełnia się, powodując, że liczba
+zgonów w Polsce nieznacznie rośnie.
+
+|                    | 2010 | 2011 | 2012 | 2013 | 2014 | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 |
+|--------------------|------|------|------|------|------|------|------|------|------|------|------|------|
+| średnia tygodniowa | 7263 | 7211 | 7345 | 7424 | 7216 | 7582 | 7441 | 7741 | 7910 | 7839 | 9162 | 9956 |
 
 
 ![](output/65.svg)
