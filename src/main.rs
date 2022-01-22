@@ -145,8 +145,8 @@ fn draw_super_plot(years: &[AnnualData]) -> anyhow::Result<()> {
 }
 
 fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Result<()> {
-    let path = format!("output/age-group-{}.png", age_group);
-    let area = BitMapBackend::new(path.as_str(), (800, 400)).into_drawing_area();
+    let path = format!("output/age-group-{}.svg", age_group);
+    let area = SVGBackend::new(path.as_str(), (800, 400)).into_drawing_area();
 
     let x_axis = 0u32..years[0].age_groups[age_group].0.len() as u32; // They all should have the same length.
 
@@ -188,8 +188,8 @@ fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Res
             caption.clone(),
             ("sans-serif", 12).into_font().color(&BLACK),
         )
-        .set_label_area_size(LabelAreaPosition::Left, 8.percent())
-        .set_label_area_size(LabelAreaPosition::Bottom, 5.percent())
+        .set_label_area_size(LabelAreaPosition::Left, 12.percent())
+        .set_label_area_size(LabelAreaPosition::Bottom, 10.percent())
         .margin(1.percent())
         .build_cartesian_2d(x_axis.clone(), y_axis.clone())?;
 
