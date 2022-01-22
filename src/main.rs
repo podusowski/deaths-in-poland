@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::format};
+use std::collections::HashMap;
 
 use calamine::{open_workbook, Error, Reader, Xlsx};
 use plotters::prelude::*;
