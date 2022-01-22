@@ -234,19 +234,25 @@ fn main() -> anyhow::Result<()> {
 
     let mut table = prettytable::Table::new();
 
-    table.add_row(Row::new(
-        years
-            .iter()
-            .map(|year| Cell::new(format!("{}", year.year).as_str()))
-            .collect(),
-    ));
+    table.add_row(Row::new({
+        let mut row = vec![Cell::new("")];
+        row.extend(
+            years
+                .iter()
+                .map(|year| Cell::new(format!("{}", year.year).as_str())),
+        );
+        row
+    }));
 
-    table.add_row(Row::new(
-        years
-            .iter()
-            .map(|year| Cell::new(format!("{}", year.general.avg()).as_str()))
-            .collect(),
-    ));
+    table.add_row(Row::new({
+        let mut row = vec![Cell::new("średnia")];
+        row.extend(
+            years
+                .iter()
+                .map(|year| Cell::new(format!("{}", year.general.avg()).as_str())),
+        );
+        row
+    }));
 
     table.printstd();
 
