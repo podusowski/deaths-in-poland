@@ -236,7 +236,7 @@ fn print_tables(years: &[AnnualData]) {
     table.set_format(github);
 
     table.add_row(Row::new({
-        let mut row = vec![Cell::new("średnia tygodniowa")];
+        let mut row = vec![Cell::new("")];
         row.extend(
             years
                 .iter()
@@ -246,7 +246,7 @@ fn print_tables(years: &[AnnualData]) {
     }));
 
     table.add_row(Row::new({
-        let mut row = vec![Cell::new("ogółem")];
+        let mut row = vec![Cell::new("średnia tygodniowa")];
         row.extend(
             years
                 .iter()
