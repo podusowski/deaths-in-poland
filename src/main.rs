@@ -2,6 +2,7 @@ use std::{collections::HashMap, fmt::format};
 
 use calamine::{open_workbook, Error, Reader, Xlsx};
 use plotters::prelude::*;
+use prettytable::{Cell, Row};
 
 #[derive(Debug)]
 struct AgeGroup(Vec<u32>);
@@ -230,6 +231,24 @@ fn main() -> anyhow::Result<()> {
     let years = (2017..2021)
         .map(|year| read(year).expect("Could not read"))
         .collect::<Vec<_>>();
+
+    let mut table = prettytable::Table::new();
+
+    table.add_row(Row::new(
+        years
+            .iter()
+            .map(|year| Cell::new(format!("{}", year.year).as_str()))
+            .collect(),
+    ));
+
+    table.add_row(Row::new(
+        years
+            .iter()
+            .map(|year| Cell::new(format!("{}", year.general.avg()).as_str()))
+            .collect(),
+    ));
+
+    table.printstd();
 
     for year in &years {
         println!("{}, średnia: {}", year.year, year.general.avg());
