@@ -21,6 +21,7 @@ impl AgeGroup {
 }
 
 struct AnnualData {
+    year: usize,
     title: String,
     general: AgeGroup,
     age_groups: HashMap<&'static str, AgeGroup>,
@@ -66,7 +67,8 @@ const AGE_GROUPS: &'static [&str] = &[
     "90 i więcej",
 ];
 
-fn read(path: &str) -> anyhow::Result<AnnualData> {
+fn read(year: usize) -> anyhow::Result<AnnualData> {
+    let path = format!("data/Zgony wedИug tygodni w Polsce_{}.xlsx", year);
     let mut workbook: Xlsx<_> = open_workbook(path)?;
 
     let range = workbook
@@ -79,6 +81,7 @@ fn read(path: &str) -> anyhow::Result<AnnualData> {
     }
 
     Ok(AnnualData {
+        year,
         title: path.to_owned(),
         general: find_age_group(&range, "Ogółem")?,
         age_groups,
@@ -224,15 +227,9 @@ fn main() -> anyhow::Result<()> {
         .expect(format!("Can't create directory '{}'", OUTPUT_DIR).as_str());
     println!("Result will be written to {}", OUTPUT_DIR);
 
-    let years = [
-        read("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2019.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2020.xlsx")?,
-        read("data/Zgony wedИug tygodni w Polsce_2021.xlsx")?,
-    ];
+    let years = (2017..2021).map(|year| read(year).expect("Could not read"));
 
-    for year in &years {
+    for year in years {
         println!("{:?}", year.title);
         println!("general ({}): {:?}", year.general.avg(), year.general);
         for (label, age_group) in &year.age_groups {
