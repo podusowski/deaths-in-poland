@@ -17,4 +17,4 @@ II wojny światowej.
 | średnia tygodniowa | 7582 | 7441 | 7741 | 7910 | 7839 | 9162 | 9956 |
 
 
-![](output/age-group-65 - 69.svg)
+![](output/65.svg)
