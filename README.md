@@ -1,5 +1,5 @@
 Główy Urząd Statystyczny na
-[https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/zgony-wedlug-tygodni,39,2.html](swojej stronie)
+[swojej stronie](https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/zgony-wedlug-tygodni,39,2.html)
 publikuje statystyki zgonów z podziałem na wiek i obszar geograficzny.
 
 Na podstawie tych danych można zbudować trójwymiarowy wykres przedstawiający
