@@ -3,7 +3,7 @@ Główy Urząd Statystyczny na
 publikuje statystyki zgonów z podziałem na wiek i obszar geograficzny.
 
 Na podstawie tych danych można zbudować trójwymiarowy wykres przedstawiający
-tygodniowe zgony od początku 2015 do połowy grudnia 2021 w zależności od wieku.
+tygodniowe zgony od początku 2015 do końca 2021 w zależności od wieku.
 
 ![](output/super.gif)
 
