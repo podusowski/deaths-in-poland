@@ -232,10 +232,9 @@ fn main() -> anyhow::Result<()> {
         .collect::<Vec<_>>();
 
     for year in &years {
-        println!("{:?}", year.title);
-        println!("general ({}): {:?}", year.general.avg(), year.general);
+        println!("{}, średnia: {}", year.year, year.general.avg());
         for (label, age_group) in &year.age_groups {
-            println!("{} ({}): {:?}", label, age_group.avg(), age_group.0);
+            println!("  {} średnia: {}", label, age_group.avg());
         }
         println!("");
     }
