@@ -69,7 +69,7 @@ const AGE_GROUPS: &'static [&str] = &[
 
 fn read(year: usize) -> anyhow::Result<AnnualData> {
     let path = format!("data/Zgony wedИug tygodni w Polsce_{}.xlsx", year);
-    let mut workbook: Xlsx<_> = open_workbook(path)?;
+    let mut workbook: Xlsx<_> = open_workbook(&path)?;
 
     let range = workbook
         .worksheet_range("OGÓŁEM")
@@ -227,9 +227,11 @@ fn main() -> anyhow::Result<()> {
         .expect(format!("Can't create directory '{}'", OUTPUT_DIR).as_str());
     println!("Result will be written to {}", OUTPUT_DIR);
 
-    let years = (2017..2021).map(|year| read(year).expect("Could not read"));
+    let years = (2017..2021)
+        .map(|year| read(year).expect("Could not read"))
+        .collect::<Vec<_>>();
 
-    for year in years {
+    for year in &years {
         println!("{:?}", year.title);
         println!("general ({}): {:?}", year.general.avg(), year.general);
         for (label, age_group) in &year.age_groups {
