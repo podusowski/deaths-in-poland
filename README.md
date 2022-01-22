@@ -1,10 +1,11 @@
-Deaths in Poland by week and age
---------------------------------
+Główy Urząd Statystyczny na
+[https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/zgony-wedlug-tygodni,39,2.html](swojej stronie)
+publikuje statystyki zgonów z podziałem na wiek i obszar geograficzny.
 
-Horizontal axes are weeks from 2017 to end of 2021
-and age groups with 5yrs intervals. Height represents the number of deaths for a
-given group in a given week.
+Na podstawie tych danych można zbudować trójwymiarowy wykres przedstawiający
+tygodniowe zgony od początku 2017 do połowy grudnia 2021 w zależności od wieku.
 
 ![](plot.gif)
 
-Data taken from https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/zgony-wedlug-tygodni,39,2.html
+Pierwszą charakterystyczną rzeczą są ekstrema wypadające na przełomie roku, czyli
+dobrze znane "sezony grypowe".
