@@ -146,10 +146,21 @@ fn draw_super_plot(years: &[AnnualData]) -> anyhow::Result<()> {
 
 fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Result<()> {
     let path = format!("output/age-group-{}.png", age_group);
-    let area = BitMapBackend::new(path.as_str(), (800, 600)).into_drawing_area();
+    let area = BitMapBackend::new(path.as_str(), (800, 400)).into_drawing_area();
 
     let x_axis = 0u32..years[0].age_groups[age_group].0.len() as u32; // They all should have the same length.
-    let y_axis = 0u32..3000u32;
+
+    let min = years
+        .iter()
+        .map(|year| year.age_groups[age_group].0.iter().min().unwrap_or(&0))
+        .min().unwrap_or(&0);
+
+    let max = years
+        .iter()
+        .map(|year| year.age_groups[age_group].0.iter().max().unwrap_or(&0))
+        .max().unwrap_or(&0);
+
+    let y_axis = *min..*max;
 
     let start_year = &years[0].year;
     let end_year = &years[years.len() - 1].year;
@@ -205,7 +216,7 @@ fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Res
 
     chart
         .configure_series_labels()
-        .position(SeriesLabelPosition::UpperRight)
+        .position(SeriesLabelPosition::UpperMiddle)
         .border_style(&BLACK)
         .draw()?;
 
