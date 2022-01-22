@@ -3,7 +3,7 @@ Główy Urząd Statystyczny na
 publikuje statystyki zgonów z podziałem na wiek i obszar geograficzny.
 
 Na podstawie tych danych można zbudować trójwymiarowy wykres przedstawiający
-tygodniowe zgony od początku 2017 do połowy grudnia 2021 w zależności od wieku.
+tygodniowe zgony od początku 2015 do połowy grudnia 2021 w zależności od wieku.
 
 ![](plot.gif)
 
@@ -12,6 +12,6 @@ dobrze znane "sezony grypowe". Dobrze widać również "dolinę" w ilości zgon�
 około 75 roku życia. Jest ona spowodowana mniejszą ilośćią urodzeń podczas
 II wojny światowej.
 
-|                    | 2017     | 2018     | 2019     | 2020    |
-|--------------------|----------|----------|----------|---------|
-| średnia tygodniowa | 7741.019 | 7909.846 | 7838.923 | 9162.34 |
+|                    | 2015      | 2016     | 2017     | 2018     | 2019     | 2020    |
+|--------------------|-----------|----------|----------|----------|----------|---------|
+| średnia tygodniowa | 7582.1133 | 7441.404 | 7741.019 | 7909.846 | 7838.923 | 9162.34 |
