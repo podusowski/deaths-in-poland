@@ -159,7 +159,7 @@ fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Res
         start_year, end_year, age_group
     );
 
-    area.fill(&BLACK)?;
+    area.fill(&WHITE)?;
 
     let mut years = years.to_vec();
     years.sort_by(|a, b| a.year.cmp(&b.year));
