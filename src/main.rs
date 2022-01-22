@@ -98,7 +98,7 @@ fn flatten_out_into_weeks(years: &[AnnualData]) -> Vec<Vec<u32>> {
 }
 
 fn draw_super_plot(years: &[AnnualData]) -> anyhow::Result<()> {
-    let area = BitMapBackend::gif("plot.gif", (1024, 760), 100)?.into_drawing_area();
+    let area = BitMapBackend::gif("output/super.gif", (1024, 760), 100)?.into_drawing_area();
 
     let data = flatten_out_into_weeks(years);
     let x_axis = 0u32..data.len() as u32;
@@ -140,13 +140,15 @@ fn draw_super_plot(years: &[AnnualData]) -> anyhow::Result<()> {
 }
 
 fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Result<()> {
-    let path = format!("age-group-{}.png", age_group);
+    let path = format!("output/age-group-{}.png", age_group);
     let area = BitMapBackend::new(path.as_str(), (1024, 760)).into_drawing_area();
 
     let x_axis = 0u32..years[0].age_groups[age_group].0.len() as u32; // They all should have the same length.
     let y_axis = 0u32..3000u32;
 
-    let caption = format!("ages {}", age_group);
+    let start_year = &years[0].title;
+
+    let caption = format!("Zgony {} {}", start_year, age_group);
 
     area.fill(&BLACK)?;
 
@@ -178,7 +180,7 @@ fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Res
 }
 
 fn draw_annual_sums(years: &[AnnualData]) -> anyhow::Result<()> {
-    let path = "annual.png";
+    let path = "output/annual.png";
     let area = BitMapBackend::new(path, (1024, 760)).into_drawing_area();
 
     let x_axis = 0u32..years[0].general.0.len() as u32; // They all should have the same length.
@@ -217,6 +219,11 @@ fn draw_annual_sums(years: &[AnnualData]) -> anyhow::Result<()> {
 }
 
 fn main() -> anyhow::Result<()> {
+    const OUTPUT_DIR: &str = "output";
+    std::fs::create_dir(OUTPUT_DIR)
+        .expect(format!("Can't create directory '{}'", OUTPUT_DIR).as_str());
+    println!("Result will be written to {}", OUTPUT_DIR);
+
     let years = [
         read("data/Zgony wedИug tygodni w Polsce_2017.xlsx")?,
         read("data/Zgony wedИug tygodni w Polsce_2018.xlsx")?,
