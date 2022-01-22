@@ -264,7 +264,7 @@ fn main() -> anyhow::Result<()> {
         .expect(format!("Can't create directory '{}'", OUTPUT_DIR).as_str());
     println!("Result will be written to {}", OUTPUT_DIR);
 
-    let years = (2015..2021)
+    let years = (2015..2022)
         .map(|year| read(year).expect("Could not read"))
         .collect::<Vec<_>>();
 
