@@ -236,7 +236,7 @@ fn print_tables(years: &[AnnualData]) {
     table.set_format(github);
 
     table.add_row(Row::new({
-        let mut row = vec![Cell::new("")];
+        let mut row = vec![Cell::new("średnia tygodniowa")];
         row.extend(
             years
                 .iter()
@@ -246,14 +246,24 @@ fn print_tables(years: &[AnnualData]) {
     }));
 
     table.add_row(Row::new({
-        let mut row = vec![Cell::new("średnia tygodniowa")];
+        let mut row = vec![Cell::new("ogółem")];
         row.extend(
             years
                 .iter()
-                .map(|year| Cell::new(format!("{}", year.general.avg()).as_str())),
+                .map(|year| Cell::new(format!("{}", year.general.avg().round()).as_str())),
         );
         row
     }));
+
+    for age_group in AGE_GROUPS {
+        table.add_row(Row::new({
+            let mut row = vec![Cell::new(age_group)];
+            row.extend(years.iter().map(|year| {
+                Cell::new(format!("{}", year.age_groups[age_group].avg().round()).as_str())
+            }));
+            row
+        }));
+    }
 
     table.printstd();
 }
