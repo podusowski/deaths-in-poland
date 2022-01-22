@@ -222,16 +222,7 @@ fn draw_annual_sums(years: &[AnnualData]) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn main() -> anyhow::Result<()> {
-    const OUTPUT_DIR: &str = "output";
-    std::fs::create_dir(OUTPUT_DIR)
-        .expect(format!("Can't create directory '{}'", OUTPUT_DIR).as_str());
-    println!("Result will be written to {}", OUTPUT_DIR);
-
-    let years = (2017..2021)
-        .map(|year| read(year).expect("Could not read"))
-        .collect::<Vec<_>>();
-
+fn print_tables(years: &[AnnualData]) {
     let mut table = prettytable::Table::new();
 
     table.add_row(Row::new({
@@ -245,7 +236,7 @@ fn main() -> anyhow::Result<()> {
     }));
 
     table.add_row(Row::new({
-        let mut row = vec![Cell::new("średnia")];
+        let mut row = vec![Cell::new("średnia tygodniowa")];
         row.extend(
             years
                 .iter()
@@ -255,6 +246,17 @@ fn main() -> anyhow::Result<()> {
     }));
 
     table.printstd();
+}
+
+fn main() -> anyhow::Result<()> {
+    const OUTPUT_DIR: &str = "output";
+    std::fs::create_dir(OUTPUT_DIR)
+        .expect(format!("Can't create directory '{}'", OUTPUT_DIR).as_str());
+    println!("Result will be written to {}", OUTPUT_DIR);
+
+    let years = (2017..2021)
+        .map(|year| read(year).expect("Could not read"))
+        .collect::<Vec<_>>();
 
     for year in &years {
         println!("{}, średnia: {}", year.year, year.general.avg());
@@ -263,6 +265,8 @@ fn main() -> anyhow::Result<()> {
         }
         println!("");
     }
+
+    print_tables(&years);
 
     draw_super_plot(&years)?;
 
