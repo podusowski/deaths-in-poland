@@ -69,8 +69,21 @@ const AGE_GROUPS: &'static [&str] = &[
     "90 i więcej",
 ];
 
+fn find_sheet(year: usize) -> std::path::PathBuf {
+    for p in [
+        std::path::Path::new(format!("data/Zgony wedêug tygodni w Polsce_{}.xlsx", year).as_str()),
+        std::path::Path::new(format!("data/Zgony wedlug tygodni w Polsce_{}.xlsx", year).as_str()),
+        std::path::Path::new(format!("data/Zgony wedИug tygodni w Polsce_{}.xlsx", year).as_str()),
+    ] {
+        if p.exists() {
+            return p.to_owned();
+        }
+    }
+    panic!("no path");
+}
+
 fn read(year: usize) -> anyhow::Result<AnnualData> {
-    let path = format!("data/Zgony wedИug tygodni w Polsce_{}.xlsx", year);
+    let path = find_sheet(year);
     let mut workbook: Xlsx<_> = open_workbook(&path)?;
 
     let range = workbook
@@ -84,7 +97,7 @@ fn read(year: usize) -> anyhow::Result<AnnualData> {
 
     Ok(AnnualData {
         year,
-        title: path.to_owned(),
+        title: format!("{}", path.display()),
         general: find_age_group(&range, "Ogółem")?,
         age_groups,
     })
@@ -153,12 +166,14 @@ fn draw_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Res
     let min = years
         .iter()
         .map(|year| year.age_groups[age_group].0.iter().min().unwrap_or(&0))
-        .min().unwrap_or(&0);
+        .min()
+        .unwrap_or(&0);
 
     let max = years
         .iter()
         .map(|year| year.age_groups[age_group].0.iter().max().unwrap_or(&0))
-        .max().unwrap_or(&0);
+        .max()
+        .unwrap_or(&0);
 
     let y_axis = *min..*max;
 
