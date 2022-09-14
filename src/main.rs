@@ -345,7 +345,7 @@ fn main() -> anyhow::Result<()> {
 
     print_tables(&years);
 
-    //draw_super_plot(&years)?;
+    draw_super_plot(&years)?;
 
     for age_group in AGE_GROUPS {
         draw_plot_for_age_group(&years, age_group)?;
