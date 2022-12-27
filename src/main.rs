@@ -74,6 +74,7 @@ fn find_sheet(year: usize) -> std::path::PathBuf {
         std::path::Path::new(format!("data/Zgony wedêug tygodni w Polsce_{}.xlsx", year).as_str()),
         std::path::Path::new(format!("data/Zgony wedlug tygodni w Polsce_{}.xlsx", year).as_str()),
         std::path::Path::new(format!("data/Zgony wedИug tygodni w Polsce_{}.xlsx", year).as_str()),
+        std::path::Path::new(format!("data/Zgony wedug tygodni w Polsce_{}.xlsx", year).as_str()),
     ] {
         if p.exists() {
             return p.to_owned();
