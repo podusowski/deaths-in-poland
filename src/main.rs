@@ -116,6 +116,80 @@ fn flatten_out_into_weeks(years: &[AnnualData]) -> Vec<Vec<u32>> {
     data
 }
 
+fn flatten_out_into_weeks_by_age_group(years: &[AnnualData], age_group: &str) -> Vec<u32> {
+    let mut data = Vec::<u32>::new();
+    for year in years {
+        data.extend(year.age_groups[age_group].0.iter());
+    }
+    data
+}
+
+fn draw_continuous_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Result<()> {
+    let path = format!("output/continuous-age-group-{}.svg", age_group);
+    let area = SVGBackend::new(path.as_str(), (800, 400)).into_drawing_area();
+
+    let data = flatten_out_into_weeks_by_age_group(years, age_group);
+
+    let x_axis = 0u32..data.len() as u32;
+
+    let min = data.iter().min().unwrap_or(&0);
+    let max = data.iter().max().unwrap_or(&0);
+
+    let y_axis = *min..*max;
+
+    let start_year = &years[0].year;
+    let end_year = &years[years.len() - 1].year;
+
+    let caption = format!(
+        "Zgony w latach {} - {} wśród osób {}",
+        start_year, end_year, age_group
+    );
+
+    area.fill(&WHITE)?;
+
+    let mut years = years.to_vec();
+    years.sort_by(|a, b| a.year.cmp(&b.year));
+    years.reverse();
+
+    let mut chart = ChartBuilder::on(&area)
+        .caption(
+            caption.clone(),
+            ("sans-serif", 12).into_font().color(&BLACK),
+        )
+        .set_label_area_size(LabelAreaPosition::Left, 12.percent())
+        .set_label_area_size(LabelAreaPosition::Bottom, 10.percent())
+        .margin(1.percent())
+        .build_cartesian_2d(x_axis.clone(), y_axis.clone())?;
+
+    chart
+        .configure_mesh()
+        .disable_mesh()
+        .x_desc("Tydzień")
+        .y_desc("Ilość zgonów")
+        .draw()?;
+
+        chart
+            .draw_series(LineSeries::new(
+                   data 
+                    .iter()
+                    .enumerate()
+                    .map(|(x, y)| (x as u32, *y)),
+                BLACK.stroke_width(2),
+            ))?;
+            //.label(format!("{}", year.year))
+            //.legend(move |(x, y)| Rectangle::new([(x, y - 5), (x + 10, y + 5)], BLACK.filled()));
+
+    chart
+        .configure_series_labels()
+        .position(SeriesLabelPosition::UpperMiddle)
+        .border_style(&BLACK)
+        .draw()?;
+
+    area.present()?;
+
+    Ok(())
+}
+
 fn draw_super_plot(years: &[AnnualData]) -> anyhow::Result<()> {
     let area = BitMapBackend::gif("output/super.gif", (1024, 760), 100)?.into_drawing_area();
 
@@ -350,6 +424,7 @@ fn main() -> anyhow::Result<()> {
 
     for age_group in AGE_GROUPS {
         draw_plot_for_age_group(&years, age_group)?;
+        draw_continuous_plot_for_age_group(&years, age_group)?;
     }
 
     draw_annual_sums(&years)?;
