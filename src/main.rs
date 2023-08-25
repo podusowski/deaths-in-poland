@@ -75,6 +75,7 @@ fn find_sheet(year: usize) -> std::path::PathBuf {
         std::path::Path::new(format!("data/Zgony wedlug tygodni w Polsce_{}.xlsx", year).as_str()),
         std::path::Path::new(format!("data/Zgony wedИug tygodni w Polsce_{}.xlsx", year).as_str()),
         std::path::Path::new(format!("data/Zgony wedug tygodni w Polsce_{}.xlsx", year).as_str()),
+        std::path::Path::new(format!("data/zgony_wedlug_tygodni_w_polsce_{}.xlsx", year).as_str()),
     ] {
         if p.exists() {
             return p.to_owned();
@@ -176,14 +177,12 @@ fn draw_continuous_plot_for_age_group(years: &[AnnualData], age_group: &str) -> 
                     .map(|(x, y)| (x as u32, *y)),
                 BLACK.stroke_width(2),
             ))?;
-            //.label(format!("{}", year.year))
-            //.legend(move |(x, y)| Rectangle::new([(x, y - 5), (x + 10, y + 5)], BLACK.filled()));
 
-    chart
-        .configure_series_labels()
-        .position(SeriesLabelPosition::UpperMiddle)
-        .border_style(&BLACK)
-        .draw()?;
+    //chart
+    //    .configure_series_labels()
+    //    .position(SeriesLabelPosition::UpperMiddle)
+    //    .border_style(&BLACK)
+    //    .draw()?;
 
     area.present()?;
 
