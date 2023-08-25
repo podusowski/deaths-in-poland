@@ -126,7 +126,7 @@ fn flatten_out_into_weeks_by_age_group(years: &[AnnualData], age_group: &str) ->
 }
 
 fn draw_continuous_plot_for_age_group(years: &[AnnualData], age_group: &str) -> anyhow::Result<()> {
-    let path = format!("output/continuous-age-group-{}.svg", age_group);
+    let path = format!("output/continuous-age-group-{}.svg", age_group.replace(" ", ""));
     let area = SVGBackend::new(path.as_str(), (800, 400)).into_drawing_area();
 
     let data = flatten_out_into_weeks_by_age_group(years, age_group);
