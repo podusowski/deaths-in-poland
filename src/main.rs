@@ -151,7 +151,7 @@ fn draw_continuous_plot_for_age_group(years: &[AnnualData], age_group: &str) -> 
     let mut chart = ChartBuilder::on(&area)
         .caption(
             caption.clone(),
-            ("sans-serif", 12).into_font().color(&BLACK),
+            ("sans-serif", 20).into_font().color(&BLACK),
         )
         .set_label_area_size(LabelAreaPosition::Left, 12.percent())
         .set_label_area_size(LabelAreaPosition::Bottom, 10.percent())
