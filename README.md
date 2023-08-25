@@ -21,3 +21,5 @@ zgonów w Polsce nieznacznie rośnie.
 
 
 ![](output/65.svg)
+![](continuous-age-group-25 - 29.svg)
+![](continuous-age-group-65 - 69.svg)

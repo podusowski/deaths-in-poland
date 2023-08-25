@@ -148,10 +148,6 @@ fn draw_continuous_plot_for_age_group(years: &[AnnualData], age_group: &str) -> 
 
     area.fill(&WHITE)?;
 
-    let mut years = years.to_vec();
-    years.sort_by(|a, b| a.year.cmp(&b.year));
-    years.reverse();
-
     let mut chart = ChartBuilder::on(&area)
         .caption(
             caption.clone(),
@@ -177,12 +173,6 @@ fn draw_continuous_plot_for_age_group(years: &[AnnualData], age_group: &str) -> 
                     .map(|(x, y)| (x as u32, *y)),
                 BLACK.stroke_width(2),
             ))?;
-
-    //chart
-    //    .configure_series_labels()
-    //    .position(SeriesLabelPosition::UpperMiddle)
-    //    .border_style(&BLACK)
-    //    .draw()?;
 
     area.present()?;
 
