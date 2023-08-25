@@ -20,6 +20,5 @@ zgonów w Polsce nieznacznie rośnie.
 | średnia tygodniowa | 7263 | 7211 | 7345 | 7424 | 7216 | 7582 | 7441 | 7741 | 7910 | 7839 | 9162 | 9956 |
 
 
-![](output/65.svg)
-![](continuous-age-group-25 - 29.svg)
-![](continuous-age-group-65 - 69.svg)
+![](output/continuous-age-group-25 - 29.svg)
+![](output/continuous-age-group-65 - 69.svg)
